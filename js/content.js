@@ -15,7 +15,7 @@ window.MODULES = [
     { heading: "The three pillars (say them in this order)", html: `
       <ol>
         <li><strong>Structure</strong>: aligned electrospun PCL nanofibres give contact guidance so axons grow straight across the gap.</li>
-        <li><strong>Signal</strong>: graphene nanoplatelets make the mat conductive (team data: percolation between 5 and 10 wt%, optimum 15 wt%, σ = 0.32 S/cm), supporting the bioelectric environment regenerating axons need.</li>
+        <li><strong>Signal</strong>: graphene nanoplatelets make the mat conductive (team four-point probe: below detection up to 2 wt%, 2.5 × 10⁻⁵ S/cm at 5 wt%, 0.02 S/cm at 10 wt%, 0.32 S/cm at 15 wt%, 0.45 S/cm at 20 wt%; loadings are wt% of PCL), supporting the bioelectric environment regenerating axons need.</li>
         <li><strong>Stimulus</strong>: a patented bioactive peptide (Synthesis and Bioactive Materials Laboratory, UPM) covalently attached to the fibre surface replaces short-lived growth factors.</li>
       </ol>
       <p>Plus the <strong>precision layer</strong>: XGBoost + SHAP model trained on the team's own fabrication and characterisation results plus curated literature, used to pick the next formulation to make.</p>` },
@@ -37,9 +37,9 @@ window.MODULES = [
       <p>Rule: whoever owns the topic answers first; others add one sentence maximum. Never contradict a teammate in front of judges; correct privately after.</p>` }
   ],
   keyNumbers: [
-    ["15 wt%", "optimum graphene loading (team 4-point probe)"],
+    ["15 wt%", "chosen graphene loading (team 4-point probe)"],
     ["0.32 S/cm", "conductivity at 15 wt% (team data)"],
-    ["5 to 10 wt%", "percolation threshold window (team data)"],
+    ["5 to 10 wt%", "percolation window: 2.5e-5 → 0.02 S/cm (team)"],
     ["TRL 4 / MRL 1", "declared readiness"],
     ["NG108-15", "current cell line"]
   ],
@@ -278,7 +278,7 @@ window.MODULES = [
       <ul>
         <li>Stacks of a few to tens of graphene layers, lateral size of micrometres, thickness a few nm. Pristine sp² carbon, not graphene oxide (GO). Team note: the reference sample labelled "GO" was pristine GNP; always say GNP.</li>
         <li>Why conductive: delocalised π electrons. In an insulating polymer, conductivity appears when platelets touch to form a continuous network: the <strong>percolation threshold</strong>. Below it, conductivity rises slowly; above it, it jumps by orders of magnitude then plateaus.</li>
-        <li>Team data: threshold between 5 and 10 wt%, optimum 15 wt% (σ = 0.32 S/cm by 4-point probe); 20 wt% gave no useful gain and worse fibre quality. Low loadings (0.2 to 0.6 wt%) were undetectable by XRD and EDX but visible by Raman.</li>
+        <li>Team data (loading as wt% of PCL): 0.2 to 2 wt% below detection; 5 wt% about 2.5 × 10⁻⁵ S/cm; 10 wt% about 0.02 S/cm; 15 wt% 0.32 S/cm (mean of 5 to 6 readings; one first reading of 3 S/cm was excluded and re-measured at 0.42); 20 wt% about 0.45 S/cm, a small gain for worse fibre quality. Low loadings were undetectable by XRD and EDX but visible by Raman.</li>
         <li>Extra benefits: nucleating agent for PCL (Tm up 4 to 5 °C, crystallinity up 10 to 15 points by DSC), stiffer fibres, radical scavenging reported in literature.</li>
         <li>Costs: GNP is cheap compared with CVD graphene or carbon nanotubes; dispersion in DCM needs sonication and may need a surfactant or GO-type functionalisation to avoid agglomerates.</li>
         <li>GO vs rGO vs GNP in one line: GO is oxidised, hydrophilic, insulating, easy to disperse; rGO partially restores conductivity; GNP is conductive and hydrophobic from the start.</li>
@@ -341,7 +341,7 @@ window.MODULES = [
     { heading: "Team batch lessons (Lee answers)", html: `
       <ul>
         <li>Samples 3, 4, 5, 8: aligned, bead-free fibres. Sample 1: micro-ribbons (jet collapsed before drying; too fast solvent loss on skin, too high flow). Sample 6: beaded and fused (low viscosity or high humidity, insufficient drying).</li>
-        <li>Adjusted method (22 Oct run): 15% w/v PCL in DCM gave more uniform fibres.</li>
+        <li>Adjusted method (22 Oct run): 15% w/v PCL in DCM gave bead-free aligned fibres, median diameter 359 nm, 72 to 84% within ±10° of the collector axis. Earlier 8 Oct batches: median 245 nm (0.2% graphene) and 152 nm (0.6% graphene), with a minority of thick porous fibres.</li>
         <li>EDX showed PBS salt contamination (Na, Cl, P, K) on samples that had been in buffer and not rinsed with deionised water; always rinse and dry before SEM/EDX.</li>
         <li>Mats were too thin for XRD (aluminium holder peaks dominated). Either stack layers or spin longer for XRD samples.</li>
         <li>Every batch gets a fabrication log line (concentration, voltage, distance, flow, rpm, humidity, temperature, GNP wt%) because those are the ML inputs.</li>
@@ -378,12 +378,12 @@ window.MODULES = [
   sections: [
     { heading: "Technique map", html: `
       <table><thead><tr><th>Technique</th><th>Proves</th><th>Cannot</th><th>Team result</th></tr></thead><tbody>
-      <tr><td>FESEM</td><td>Fibre diameter, alignment, beads, pores, agglomerates</td><td>Chemistry, bulk composition</td><td>Aligned bead-free fibres in good batches; 22 Oct method more uniform</td></tr>
+      <tr><td>FESEM</td><td>Fibre diameter, alignment, beads, pores, agglomerates</td><td>Chemistry, bulk composition</td><td>Median 359 nm (22 Oct), 245 and 152 nm (8 Oct); 79% within ±10°; peptide-coated fibres show a rough textured surface at 100 k×</td></tr>
       <tr><td>EDX</td><td>Elemental map (C, O, N, contaminants)</td><td>Distinguish graphene from PCL carbon</td><td>Salt contamination detected; graphene not resolvable</td></tr>
       <tr><td>XRD</td><td>PCL crystalline peaks ~21.4° (110) and 23.7° (200); graphite (002) ~26.5°</td><td>Detect GNP below ~1 wt%; thin mats</td><td>Weak PCL signal, GNP undetectable at 0.2 to 0.6 wt%</td></tr>
       <tr><td>Raman</td><td>Graphene present: D ~1350, G ~1580, 2D ~2700 cm⁻¹; I_D/I_G shows defects; signal scales with loading</td><td>Quantify wt% exactly</td><td>Confirmed GNP incorporation scaling with loading</td></tr>
       <tr><td>TGA/DSC</td><td>Thermal stability, Tm, crystallinity (ΔHm / ΔHm° of 139.5 J/g for 100% PCL), filler residue</td><td>Morphology</td><td>Tm +4 to 5 °C, crystallinity +10 to 15 points, stability unchanged</td></tr>
-      <tr><td>4-point probe</td><td>Sheet resistance → conductivity σ = 1/(R_s × t)</td><td>Through-thickness conductivity in wet state</td><td>Threshold 5 to 10 wt%, 0.32 S/cm at 15 wt%</td></tr>
+      <tr><td>4-point probe</td><td>Sheet resistance → conductivity σ = 1/(R_s × t)</td><td>Through-thickness conductivity in wet state</td><td>Below detection to 2 wt%; 2.5e-5 (5), 0.02 (10), 0.32 (15), 0.45 (20) S/cm</td></tr>
       <tr><td>FTIR</td><td>Peptide amide bands; PCL C=O 1725 cm⁻¹</td><td>Surface-only (use ATR)</td><td>Planned</td></tr>
       <tr><td>Contact angle</td><td>Wettability change after functionalisation</td><td>Peptide identity</td><td>Planned</td></tr>
       <tr><td>Tensile test</td><td>Modulus, strength, elongation; aligned mats anisotropic</td><td>In vivo mechanics</td><td>Planned</td></tr>
@@ -392,7 +392,7 @@ window.MODULES = [
     { heading: "Numbers to know for Raman", html: `
       <p>D band (~1350 cm⁻¹) arises from defects and edges; G band (~1580 cm⁻¹) from in-plane sp² stretching; 2D band (~2700 cm⁻¹) from second-order process and its shape reflects layer number. Low I_D/I_G means more pristine graphene. In PCL composite spectra, PCL bands (C=O ~1725, CH₂ ~1440, ~2900 cm⁻¹) sit alongside. Raman was the only technique that detected graphene at low loading because it is sensitive to sp² carbon even in small amounts.</p>` },
     { heading: "Alignment quantification", html: `
-      <p>Measure orientation angle of at least 100 fibres per image in ImageJ (OrientationJ or FFT). Report the fraction within ±10° or ±20° of the main axis and the circular standard deviation. "Aligned" should mean a number, for example 80% within ±10°.</p>` },
+      <p>Structure-tensor analysis of the FESEM images gives the orientation distribution. Team result for the 0.2% graphene mat: 79% of fibre signal within ±10° and 93% within ±20° of the collector axis; 22 Oct run: 72 to 84% within ±10°. "Aligned" always comes with that number.</p>` },
     { heading: "Conductivity calculation", html: `
       <p>Four-point probe gives sheet resistance R_s (Ω/sq) from V/I with geometric correction factor (4.532 for a thin large sheet). Conductivity σ = 1/(R_s × t) where t is mat thickness. Thickness uncertainty dominates error; measure thickness by micrometer or SEM cross-section and report ± SD. Judges may ask if 0.32 S/cm is enough: nerve tissue conductivity is about 0.1 to 1 S/m (that is 0.001 to 0.01 S/cm), so the scaffold is far more conductive than tissue; the target is not matching tissue but providing a continuous conductive path.</p>` }
   ],

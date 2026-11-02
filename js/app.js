@@ -79,7 +79,7 @@ const VIS = window.VISUALS || {};
 const figHTML = (ref, cls="fig") => {
   if (!ref) return "";
   if (ref.startsWith("svg:")) { const d = DG[ref.slice(4)]; return d ? `<figure class="${cls}">${d.svg}<figcaption>${esc(d.caption)}</figcaption></figure>` : ""; }
-  return `<figure class="${cls}"><img src="${ref}" alt=""></figure>`;
+  const cap = (window.CAPTIONS||{})[ref]; return `<figure class="${cls}"><img src="${ref}" alt="${esc(cap||"")}">${cap?`<figcaption>${esc(cap)}</figcaption>`:""}</figure>`;
 };
 // Long tables and lists fold behind a toggle so the page reads as prose first.
 const foldHeavy = html => {
