@@ -41,60 +41,81 @@ const dashboard = () => {
   const attempts = S.quiz.length, best = attempts ? Math.max(...S.quiz.map(q=>q.score)) : 0;
   const weak = weakSet();
   const byCat = {}; QS.forEach(q => byCat[q.cat] = (byCat[q.cat]||0)+1);
+  const groups = [...new Set(MODS.map(m=>m.tag))];
   return `
-  <span class="tag">Team NANOREGEN-X · INO 2026 Taipei</span>
-  <h1>Know the project cold.</h1>
-  <p class="lede">Everything a judge could ask about NanoAxon-X: nerve biology, materials, fabrication, safety, regulation, the ML tool, the demonstrator and the business case. Read the modules, drill the question bank, run mock juries with a timer.</p>
-  <div class="stats">
-    <div class="stat"><b>${pct()}%</b><span>modules marked done</span></div>
-    <div class="stat"><b>${QS.length}</b><span>judge questions</span></div>
-    <div class="stat"><b>${best}%</b><span>best quiz score (${attempts} attempt${attempts===1?"":"s"})</span></div>
-    <div class="stat"><b>${weak.length}</b><span>questions flagged weak in mock jury</span></div>
+  <div class="mod-head">
+    <span class="tag">Team NANOREGEN-X · INO 2026 Taipei</span>
+    <h1>Know NanoAxon-X cold.</h1>
+    <p class="lede">The science, the medicine, the risks and the business, laid out for the four of us. Read a module, flip its cards, then let the mock jury grill you.</p>
   </div>
+  ${figHTML("svg:hero", "fig hero")}
   <div class="row">
     <a class="btn" href="#/jury">Start mock jury</a>
     <a class="btn sec" href="#/quiz">Take a quiz</a>
     <a class="btn sec" href="#/cards">Flashcards</a>
     ${weak.length ? `<a class="btn sec" href="#/jury?weak=1">Drill ${weak.length} weak questions</a>` : ""}
   </div>
-  <div class="callout warn"><h3>Before the competition, fill these gaps in the content</h3>
+  <div class="stats">
+    <div class="stat"><b>${pct()}%</b><span>modules done</span></div>
+    <div class="stat"><b>${QS.length}</b><span>judge questions</span></div>
+    <div class="stat"><b>${best}%</b><span>best quiz (${attempts} attempt${attempts===1?"":"s"})</span></div>
+    <div class="stat"><b>${weak.length}</b><span>flagged weak</span></div>
+  </div>
+  ${groups.map(g => `<section class="sec"><h2>${esc(g)}</h2><div class="grid">${MODS.filter(m=>m.tag===g).map(m=>{const i=MODS.indexOf(m), v=VIS[m.id]||{}; return `<a class="card" href="#/m/${m.id}">${v.hero ? `<div class="thumb">${v.hero.startsWith("svg:") ? (DG[v.hero.slice(4)]||{}).svg||"" : `<img src="${v.hero}" alt="">`}</div>` : ""}<h3>${String(i+1).padStart(2,"0")} · ${esc(m.title)}</h3><p>${esc(m.summary)}</p><span class="meta"><span>${m.cards.length} cards · ${QS.filter(q=>catForModule(m.id).includes(q.cat)).length} questions</span><span>${S.done[m.id]?"✓ done":""}</span></span></a>`}).join("")}</div></section>`).join("")}
+  <section class="sec"><h2>Question bank</h2><div class="numbers">${Object.entries(byCat).map(([c,n])=>`<a class="num" href="#/bank?cat=${encodeURIComponent(c)}"><b>${n}</b><span>${esc(c)}</span></a>`).join("")}</div></section>
+  <section class="sec"><div class="callout warn"><h3>Still to fill in before Taipei</h3>
   <ul>
-    <li>Peptide mechanism class and receptor (Materials module, Q bank "What does your peptide do"). Sequence stays confidential.</li>
-    <li>Exact IMARC market figure, year and CAGR used in the pitch script (Business module).</li>
-    <li>Investment ask and unit price range (Business Q bank).</li>
-    <li>Latest conductivity, alignment and cell numbers from the results document, to replace "planned".</li>
-  </ul></div>
-  <h2>Modules</h2>
-  <div class="grid">${MODS.map((m,i)=>`<a class="card" href="#/m/${m.id}"><span class="tag">${esc(m.tag)}</span><h3>${i+1}. ${esc(m.title)}</h3><p>${esc(m.summary)}</p><span class="meta"><span>${m.cards.length} cards · ${QS.filter(q=>catForModule(m.id).includes(q.cat)).length} judge Qs</span><span>${S.done[m.id]?"✓ done":""}</span></span></a>`).join("")}</div>
-  <h2>Question bank by category</h2>
-  <div class="numbers">${Object.entries(byCat).map(([c,n])=>`<a class="num" href="#/bank?cat=${encodeURIComponent(c)}"><b>${n}</b><span>${esc(c)}</span></a>`).join("")}</div>`;
+    <li>Peptide mechanism and receptor (sequence stays confidential).</li>
+    <li>The IMARC market figure, year and growth rate from the pitch script.</li>
+    <li>Investment ask and a unit price range.</li>
+    <li>Latest conductivity, alignment and cell numbers from the results document.</li>
+  </ul></div></section>`;
 };
 
 const catMap = { overview:["Concept","Team"], anatomy:["Medical"], injury:["Medical"], clinical:["Medical"], design:["Materials","Fabrication"], materials:["Materials"], fabrication:["Fabrication"], characterisation:["Fabrication"], cells:["Cells"], conductivity:["Conductivity"], toxicity:["Safety"], regulatory:["Regulatory"], ml:["ML"], demonstrator:["Prototype"], business:["Business"], pitch:["Team","Concept"], glossary:[] };
 function catForModule(id){ return catMap[id] || []; }
 
+const VIS = window.VISUALS || {};
+const figHTML = (ref, cls="fig") => {
+  if (!ref) return "";
+  if (ref.startsWith("svg:")) { const d = DG[ref.slice(4)]; return d ? `<figure class="${cls}">${d.svg}<figcaption>${esc(d.caption)}</figcaption></figure>` : ""; }
+  return `<figure class="${cls}"><img src="${ref}" alt=""></figure>`;
+};
+// Long tables and lists fold behind a toggle so the page reads as prose first.
+const foldHeavy = html => {
+  html = html.replace(/(<table[\s\S]*?<\/table>)/g, `<details class="fold"><summary>Show the table</summary>$1</details>`);
+  // lists longer than 4 items: show 3, fold the rest
+  html = html.replace(/<(ul|ol)>([\s\S]*?)<\/\1>/g, (m, tag, body) => {
+    const items = body.match(/<li>[\s\S]*?<\/li>/g) || [];
+    if (items.length <= 4) return m;
+    return `<${tag}>${items.slice(0,3).join("")}</${tag}><details class="fold"><summary>${items.length-3} more points</summary><${tag}${tag==="ol"?' start="4"':""}>${items.slice(3).join("")}</${tag}></details>`;
+  });
+  return html;
+};
 const moduleView = id => {
   const i = MODS.findIndex(m => m.id === id); if (i < 0) return `<h1>Not found</h1>`;
-  const m = MODS[i], prev = MODS[i-1], next = MODS[i+1];
-  const d = DG[m.id];
+  const m = MODS[i], prev = MODS[i-1], next = MODS[i+1], v = VIS[m.id] || {figures:{},short:[]};
   const qs = QS.filter(q => catForModule(m.id).includes(q.cat));
   return `
-  <span class="tag">${esc(m.tag)} · module ${i+1} of ${MODS.length}</span>
-  <h1>${esc(m.title)}</h1>
-  <p class="lede">${esc(m.summary)}</p>
-  ${m.keyNumbers.length ? `<div class="numbers">${m.keyNumbers.map(([n,l])=>`<div class="num"><b>${esc(n)}</b><span>${esc(l)}</span></div>`).join("")}</div>` : ""}
-  ${d ? `<figure class="fig">${d.svg}<figcaption>${esc(d.caption)}</figcaption></figure>` : ""}
-  ${m.sections.map(s => `<h2>${esc(s.heading)}</h2>${s.html}`).join("")}
-  ${m.traps.length ? `<div class="callout bad"><h3>Traps (what loses marks)</h3><ul>${m.traps.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>` : ""}
-  ${qs.length ? `<h2>Judge questions for this module</h2><div class="bank">${qs.map(q=>qDetails(q)).join("")}</div>` : ""}
-  ${m.cards.length ? `<h2>Flashcards</h2><p class="lede">Click a card to flip. <a href="#/cards?m=${m.id}">Open in flashcard mode</a>.</p>${m.cards.map(([q,a])=>flashHTML(q,a)).join("")}` : ""}
+  <div class="mod-head">
+    <span class="tag">${esc(m.tag)} · ${i+1} of ${MODS.length}</span>
+    <h1>${esc(m.title)}</h1>
+    <p class="lede">${esc(m.summary)}</p>
+  </div>
+  ${figHTML(v.hero, "fig hero")}
+  ${v.short && v.short.length ? `<section class="short"><h2>In short</h2><ol>${v.short.map(s=>`<li>${esc(s)}</li>`).join("")}</ol></section>` : ""}
+  ${m.keyNumbers.length ? `<section class="sec"><h2>Numbers to remember</h2><div class="numbers">${m.keyNumbers.map(([n,l])=>`<div class="num"><b>${esc(n)}</b><span>${esc(l)}</span></div>`).join("")}</div></section>` : ""}
+  ${m.sections.map((s,k) => `<section class="sec"><h2>${esc(s.heading)}</h2>${foldHeavy(s.html)}${figHTML(v.figures && v.figures[k])}</section>`).join("")}
+  ${m.traps.length ? `<section class="sec"><div class="callout bad"><h3>What loses marks</h3><ul>${m.traps.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div></section>` : ""}
+  ${qs.length ? `<section class="sec"><h2>What judges ask here</h2><p class="muted">${qs.length} questions. Click to see a model answer.</p><div class="bank">${qs.map(q=>qDetails(q)).join("")}</div></section>` : ""}
+  ${m.cards.length ? `<section class="sec"><h2>Flashcards</h2><p class="muted">Tap a card to flip it, or <a href="#/cards?m=${m.id}">drill them one at a time</a>.</p><div class="flash-grid">${m.cards.map(([q,a])=>flashHTML(q,a)).join("")}</div></section>` : ""}
   <div class="mark">
-    <button class="btn ${S.done[m.id]?"sec":""}" id="doneBtn">${S.done[m.id] ? "✓ Marked done (click to undo)" : "Mark module as done"}</button>
+    <button class="btn ${S.done[m.id]?"sec":""}" id="doneBtn">${S.done[m.id] ? "✓ Done (click to undo)" : "Mark as done"}</button>
     <a class="btn sec" href="#/quiz?m=${m.id}">Quiz me on this</a>
   </div>
-  <div class="row" style="justify-content:space-between;margin-top:30px">
-    ${prev ? `<a href="#/m/${prev.id}">← ${esc(prev.title)}</a>` : "<span></span>"}
-    ${next ? `<a href="#/m/${next.id}">${esc(next.title)} →</a>` : "<span></span>"}
+  <div class="pager">
+    ${prev ? `<a href="#/m/${prev.id}"><small>Previous</small>${esc(prev.title)}</a>` : "<span></span>"}
+    ${next ? `<a href="#/m/${next.id}" class="next"><small>Next</small>${esc(next.title)}</a>` : "<span></span>"}
   </div>`;
 };
 const qDetails = q => `<details${weakSet().includes(QS.indexOf(q))?' class="weak"':''}><summary><span class="chip l${q.level}">L${q.level}</span><span class="chip">${esc(q.owner)}</span> ${esc(q.q)}</summary><div class="a">${esc(q.a)}</div></details>`;

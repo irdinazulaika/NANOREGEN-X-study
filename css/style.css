@@ -12,7 +12,7 @@
   --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.8);
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.7}
 a{color:var(--teal-2);text-decoration:none}
 a:hover{text-decoration:underline}
 .skip{position:absolute;left:-999px}
@@ -47,13 +47,14 @@ a:hover{text-decoration:underline}
 .navlink .n{color:var(--muted);font-family:var(--mono);font-size:.7rem;width:18px}
 .side-foot{margin-top:18px;padding:0 8px}
 .ghost{background:none;border:1px dashed var(--line);color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer;font:inherit;font-size:.8rem;width:100%}
-.main{padding:28px 40px 80px;max-width:1040px;width:100%}
+.main{padding:40px 56px 100px;max-width:880px;width:100%;margin:0 auto}
 
 /* typography */
-h1{font-family:var(--serif);font-weight:700;font-size:2.1rem;line-height:1.15;margin:0 0 6px}
-h2{font-family:var(--serif);font-weight:600;font-size:1.35rem;margin:34px 0 10px;padding-top:8px;border-top:1px solid var(--line)}
+h1{font-family:var(--serif);font-weight:600;font-size:2.5rem;line-height:1.1;margin:10px 0 12px;letter-spacing:-.01em}
+h2{font-family:var(--serif);font-weight:600;font-size:1.45rem;margin:0 0 14px;line-height:1.25}
 h3{font-size:1rem;margin:18px 0 6px}
-.lede{color:var(--muted);font-size:1.05rem;margin:0 0 18px}
+.lede{color:var(--muted);font-size:1.12rem;margin:0 0 22px;max-width:60ch}
+.muted{color:var(--muted);font-size:.95rem;margin:-6px 0 14px}
 .tag{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--teal-soft);color:var(--teal-2);font-weight:600}
 table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.92rem}
 th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
@@ -144,3 +145,42 @@ select,input[type=number]{font:inherit;padding:7px 10px;border:1px solid var(--l
   .search input::placeholder{color:transparent}
   .numbers{grid-template-columns:1fr}
 }
+
+/* breathing room */
+.mod-head{margin-bottom:26px}
+.sec{margin:52px 0 0}
+.sec p,.sec li{max-width:66ch}
+.sec ul,.sec ol{padding-left:1.3em}
+.sec li{margin:6px 0}
+.short{margin:36px 0 0;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:var(--radius);padding:22px 26px}
+.short h2{font-size:1.05rem;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-2);font-family:var(--sans);font-weight:700;margin-bottom:10px}
+.short ol{margin:0;padding-left:1.3em;font-size:1.08rem}
+.short li{margin:6px 0}
+.fig.hero{margin:30px 0 0;padding:18px 22px}
+.fig img{width:100%;height:auto;display:block;border-radius:8px}
+.fold{margin:12px 0}
+.fold summary{cursor:pointer;color:var(--teal-2);font-weight:600;font-size:.95rem;padding:8px 0}
+.fold table{margin-top:6px;font-size:.9rem}
+.flash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.flash-grid .flash{margin:0}
+.flash-grid .inner{min-height:170px}
+.flash-grid .face{font-size:1rem;padding:22px}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:50px}
+.pager a{display:block;padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);color:var(--ink);font-weight:600}
+.pager a small{display:block;color:var(--muted);font-weight:500;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.pager a.next{text-align:right}
+.pager a:hover{border-color:var(--teal);text-decoration:none}
+.card{padding:0;overflow:hidden;gap:0}
+.card .thumb{background:var(--bg);border-bottom:1px solid var(--line);height:130px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.card .thumb svg,.card .thumb img{width:100%;height:100%;object-fit:cover}
+.card h3{padding:14px 16px 0}
+.card p{padding:6px 16px 0}
+.card .meta{padding:14px 16px 16px}
+.numbers{gap:12px}
+.num{padding:16px}
+.num b{font-size:1.25rem}
+.callout{padding:18px 22px}
+.bank details{padding:10px 14px;margin:8px 0}
+.stats{margin:22px 0 10px}
+.stat b{font-size:1.5rem}
+@media (max-width:900px){.main{padding:22px 16px 80px}.fig.hero{padding:10px}.pager{grid-template-columns:1fr}.pager a.next{text-align:left}h1{font-size:1.9rem}}
